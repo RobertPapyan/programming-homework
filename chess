@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+using namespace::std;
+
+int start(int i, int j,int turn, int *(board)[8][8]){
+    
+        if(board[i][j] == 0){
+                board[i][j] = turn;
+                }
+                
+        for(int b = 0; b<=7;b++){
+            for(int a = 0; a<=7;a++){
+                if(board[b][a]<10){cout<<' ';}
+                cout<<board[b][a]<<' ';
+                }
+            cout << endl;
+            }
+            cout<<endl<<"================"<<endl;
+        
+            cout <<endl<<endl;
+            if(board[i+2][j+1] == 0 ){turn = start(i+2,j+1,++turn,board);}
+            if(board[i+2][j-1] == 0 ){turn = start(i+2,j-1,++turn,board);}
+            if(board[i-2][j+1] == 0 ){turn = start(i-2,j+1,++turn,board);}    
+            if(board[i-2][j-1] == 0 ){turn = start(i-2,j-1,++turn,board);}
+            if(board[i+1][j-2] == 0 ){turn = start(i+1,j-2,++turn,board);}
+            if(board[i-1][j-2] == 0 ){turn = start(i-1,j-2,++turn,board);}
+            if(board[i+1][j+2] == 0 ){turn = start(i+1,j+2,++turn,board);}
+            if(board[i-1][j+2] == 0 ){turn = start(i-1,j+2,++turn,board);}
+            return(turn);
+    }
+
+int main()
+{
+    int i,j;
+    cout<<"Insert first position i =";
+    cin>>i;
+    cout<<endl<<"j = ";
+    cin>>j;
+    int board[8][8];
+        for(int b = 0; b<=7;b++){
+            for(int a = 0; a<=7;a++){
+                board[b][a] = 0;
+                cout<<board[b][a]<<' ';
+                }
+            cout << endl;
+            }
+            cout<<endl<<"================"<<endl;
+    start(i,j,1,board);
+   
+}
