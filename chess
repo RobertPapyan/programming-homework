@@ -1,50 +1,62 @@
 #include <iostream>
+#include <cmath>
+#include <cstring>
 #include <string>
-using namespace::std;
+using namespace std;
 
-int start(int i, int j,int turn, int *(board)[8][8]){
-    
-        if(board[i][j] == 0){
-                board[i][j] = turn;
-                }
-                
-        for(int b = 0; b<=7;b++){
-            for(int a = 0; a<=7;a++){
-                if(board[b][a]<10){cout<<' ';}
-                cout<<board[b][a]<<' ';
-                }
-            cout << endl;
-            }
-            cout<<endl<<"================"<<endl;
-        
-            cout <<endl<<endl;
-            if(board[i+2][j+1] == 0 ){turn = start(i+2,j+1,++turn,board);}
-            if(board[i+2][j-1] == 0 ){turn = start(i+2,j-1,++turn,board);}
-            if(board[i-2][j+1] == 0 ){turn = start(i-2,j+1,++turn,board);}    
-            if(board[i-2][j-1] == 0 ){turn = start(i-2,j-1,++turn,board);}
-            if(board[i+1][j-2] == 0 ){turn = start(i+1,j-2,++turn,board);}
-            if(board[i-1][j-2] == 0 ){turn = start(i-1,j-2,++turn,board);}
-            if(board[i+1][j+2] == 0 ){turn = start(i+1,j+2,++turn,board);}
-            if(board[i-1][j+2] == 0 ){turn = start(i-1,j+2,++turn,board);}
-            return(turn);
+bool check(int* board, int i, int j) {
+    if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+        if (*(board + i * 8 + j) == 0) { return true; }
     }
+    return false;
+}
+
+int start(int i, int j, int turn, int* board) {
+    
+    
+    
+    if (*(board+i*8+j) == 0) {
+        *(board + i * 8 + j) = turn;
+    }
+
+    for (int b = 0; b <= 7; b++) {
+        for (int a = 0; a <= 7; a++) {
+            if (*(board + b * 8 + a) < 10) { cout << ' '; }
+            cout << *(board + b * 8 + a) << ' ';
+        }
+        cout << endl;
+    }
+    cout << endl << "================" << endl;
+   
+    cout << endl << endl;
+    if (check(board,i+2,j+1)) { turn = start(i + 2, j + 1, ++turn, board); }
+    if (check(board,i+2,j-1)) { turn = start(i + 2, j - 1, ++turn, board); }
+    if (check(board,i-2,j+1)) { turn = start(i - 2, j + 1, ++turn, board); }
+    if (check(board,i-2,j-1)) { turn = start(i - 2, j - 1, ++turn, board); }
+    if (check(board,i+1,j-2)) { turn = start(i + 1, j - 2, ++turn, board); }
+    if (check(board,i-1,j-2)) { turn = start(i - 1, j - 2, ++turn, board); }
+    if (check(board,i+1,j+2)) {turn = start(i + 1, j + 2, ++turn, board); }
+    if (check(board,i-1,j+2)) { turn = start(i - 1, j + 2, ++turn, board); }
+    
+    return(turn);
+}
 
 int main()
 {
-    int i,j;
-    cout<<"Insert first position i =";
-    cin>>i;
-    cout<<endl<<"j = ";
-    cin>>j;
-    int board[8][8];
-        for(int b = 0; b<=7;b++){
-            for(int a = 0; a<=7;a++){
-                board[b][a] = 0;
-                cout<<board[b][a]<<' ';
-                }
-            cout << endl;
-            }
-            cout<<endl<<"================"<<endl;
-    start(i,j,1,board);
-   
+    int i, j;
+    cout << "Insert first position i =";
+    cin >> i;
+    cout << endl << "j = ";
+    cin >> j;
+    int board[8][8] = { {1,2,3,4,5,6,7,8},{9,10,11,12,13,14,15,16},{17,18,19,20,21,22,23,24},{25,26,27,28,29,30,31,32},{33,34,35,36,37,38,39,40},{41,42,43,44,45,46,47,48},{49,50,51,52,53,54,55,56},{57,58,59,60,61,62,63,64} };
+    for (int b = 0; b <= 7; b++) {
+        for (int a = 0; a <= 7; a++) {
+            board[b][a] = 0;
+            cout << board[b][a] << ' ';
+        }
+        cout << endl;
+    }
+    cout << endl << "================" << endl;
+    start(i, j, 1, (int*)board);
+
 }
