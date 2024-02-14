@@ -3,7 +3,7 @@
 #include <cstring>
 #include <string>
 using namespace std;
-
+// ete me qayly hasav tupik het ertal zroyacnelov ancac champen
 bool check(int* board, int i, int j) {
     if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
         if (*(board + i * 8 + j) == 0) { return true; }
