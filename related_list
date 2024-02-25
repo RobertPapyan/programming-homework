@@ -1,0 +1,166 @@
+#include <stdint.h>
+#include <iostream>
+using namespace std;
+
+
+class ListNode {
+public: ListNode(const double value = 0, ListNode* next = nullptr) {
+	this->_data = value;
+	this->_nextPtr = next;
+
+}
+	  double _data;
+	  ListNode* _nextPtr;
+
+};
+
+class List
+{
+public:
+	List();
+	~List();
+	void insertAtFront(const double);
+	void insertAtBack(const double);
+	bool removeFromFront(double&);
+	bool removeFromBack(double&);
+	bool isEmpty()const;
+	void instructions();
+	void printList();
+
+private:
+	ListNode* createNode( double, ListNode*) const;
+	ListNode* _firstPtr;
+	ListNode* _lastPtr;
+};
+
+
+List::List()
+{
+	this->_firstPtr = nullptr;
+	this->_lastPtr = nullptr;
+	this->instructions();
+}
+
+List::~List()
+{
+	
+	this->_lastPtr = nullptr;
+		while (!this->isEmpty())
+		{
+			ListNode* deletableNode = this->_firstPtr;
+			this->_firstPtr = this->_firstPtr->_nextPtr;
+			delete deletableNode;
+		}
+	
+	cout << "Ended list processing" << endl;
+}
+ListNode* List::createNode( double value, ListNode* next = nullptr)const {
+	
+	return(new ListNode(value,next));
+ }
+
+void List::insertAtFront(const double newValue) {
+	ListNode* newNode = this->createNode(newValue, this->_firstPtr);
+	if (!this->isEmpty()) {
+		
+		this->_firstPtr = newNode;
+	}
+	else {
+		this->_lastPtr = newNode;
+		this->_firstPtr = newNode;
+	}
+}
+void List::insertAtBack(const double newValue) {
+	ListNode* newNode = this->createNode(newValue);
+	if(!this->isEmpty()){
+	this->_lastPtr->_nextPtr = newNode;
+	this->_lastPtr = newNode;
+	}
+	else {
+		this->_firstPtr = newNode;
+		this->_lastPtr = newNode;
+	}
+}
+bool List::removeFromFront(double& value) {
+	if (this->isEmpty()) {
+		return false;
+	}
+	value = this->_firstPtr->_data;
+	ListNode* removableNode = this->_firstPtr;
+	this->_firstPtr = this->_firstPtr->_nextPtr;
+	delete removableNode;
+	return true;
+}
+bool List::removeFromBack(double& value) {
+	if (this->isEmpty()) {
+		return false;
+	}
+	value = this->_lastPtr->_data;
+	ListNode* loopNode = this->_firstPtr;
+	while (loopNode->_nextPtr != this->_lastPtr) {
+		loopNode = loopNode->_nextPtr;
+	}
+	delete loopNode->_nextPtr;
+	loopNode->_nextPtr = nullptr;
+	this->_lastPtr = loopNode;
+	return true;
+}
+void List::instructions() {
+	int action;
+	double value;
+	cout << "Enter one of the following:" << endl;
+	cout << "1 to insert at the begining of ilst" << endl;
+	cout << "2 to insert at the end of ilst" << endl;
+	cout << "3 to delete from the begining of ilst" << endl;
+	cout << "4 to delete at the end of ilst" << endl;
+	cout << "5 to end ilst processing" << endl;
+	cin >> action;
+	if (action == 1) {
+		cout << "Enter value:" << endl;
+		cin >> value;
+		this->insertAtFront(value);
+		
+		this->printList();
+	}
+	else if (action == 2) {
+		cout << "Enter value:" << endl;
+		cin >> value;
+		this->insertAtBack(value);
+		this->printList();
+	}
+	else if (action == 3) {
+		this->removeFromFront(value)? cout<<"Deleted "<<value<< " from list begining"<<endl : cout<<"Can not delete"<<endl;
+		this->printList();
+	}
+	else if (action == 4) {
+		this->removeFromBack(value) ? cout << "Deleted " << value << " from list end" << endl : cout << "Can not delete" << endl;
+		this->printList();
+	}
+	else if (action == 5) {
+		return;
+	}
+	this->instructions();
+}
+bool List::isEmpty() const {
+	return (this->_firstPtr == nullptr && this->_lastPtr == nullptr);
+}
+void List::printList() {
+	if (this->isEmpty()) {
+		cout << "List is empty" << endl;
+		return;
+	}
+	ListNode* loopNode = this->_firstPtr;
+	cout << "======================" << endl;
+	while (loopNode != nullptr) {
+		cout << loopNode->_data << " ---> ";
+		loopNode = loopNode->_nextPtr;
+	} 
+		cout <<endl<< "======================" << endl << endl;
+}
+
+
+int main()
+{
+	List list1;
+}
+
