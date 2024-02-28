@@ -21,6 +21,7 @@ public:
 	~List();
 	void insertAtFront(const double);
 	void insertAtBack(const double);
+	bool insertAfterIndex(const int);
 	bool removeFromFront(double&);
 	bool removeFromBack(double&);
 	bool isEmpty()const;
@@ -31,6 +32,7 @@ private:
 	ListNode* createNode( double, ListNode*) const;
 	ListNode* _firstPtr;
 	ListNode* _lastPtr;
+	int _counter;
 };
 
 
@@ -38,6 +40,7 @@ List::List()
 {
 	this->_firstPtr = nullptr;
 	this->_lastPtr = nullptr;
+	this->_counter = 0;
 	this->instructions();
 }
 
@@ -69,6 +72,7 @@ void List::insertAtFront(const double newValue) {
 		this->_lastPtr = newNode;
 		this->_firstPtr = newNode;
 	}
+	this->_counter++;
 }
 void List::insertAtBack(const double newValue) {
 	ListNode* newNode = this->createNode(newValue);
@@ -80,7 +84,21 @@ void List::insertAtBack(const double newValue) {
 		this->_firstPtr = newNode;
 		this->_lastPtr = newNode;
 	}
+	this->_counter++;
 }
+
+bool List::insertAfterIndex(const int index){
+    if(index>this->_counter){
+        return false;
+        }
+    int loopIndex = 0;
+	ListNode* loopNode = this->_firstPtr;
+	while (loopNode->_nextPtr != this->_lastPtr) {
+		loopNode = loopNode->_nextPtr;
+	}
+    
+    }
+
 bool List::removeFromFront(double& value) {
 	if (this->isEmpty()) {
 		return false;
@@ -89,21 +107,32 @@ bool List::removeFromFront(double& value) {
 	ListNode* removableNode = this->_firstPtr;
 	this->_firstPtr = this->_firstPtr->_nextPtr;
 	delete removableNode;
+	this->_counter--;
 	return true;
 }
 bool List::removeFromBack(double& value) {
 	if (this->isEmpty()) {
 		return false;
-	}
+	}if(this->_lastPtr == this->_firstPtr){
+	    value  = this->_lastPtr->_data;
+	    delete this->_lastPtr;
+	    this->_lastPtr = nullptr;
+	    this->_firstPtr = nullptr;
+	    this->_counter--;
+	    return true;
+	    }else{
 	value = this->_lastPtr->_data;
 	ListNode* loopNode = this->_firstPtr;
 	while (loopNode->_nextPtr != this->_lastPtr) {
 		loopNode = loopNode->_nextPtr;
 	}
+	   
 	delete loopNode->_nextPtr;
 	loopNode->_nextPtr = nullptr;
 	this->_lastPtr = loopNode;
+	this->_counter--;
 	return true;
+	    }
 }
 void List::instructions() {
 	int action;
@@ -137,12 +166,13 @@ void List::instructions() {
 		this->printList();
 	}
 	else if (action == 5) {
+	    this->printList();
 		return;
 	}
 	this->instructions();
 }
 bool List::isEmpty() const {
-	return (this->_firstPtr == nullptr && this->_lastPtr == nullptr);
+	return (this->_firstPtr == nullptr || this->_lastPtr == nullptr);
 }
 void List::printList() {
 	if (this->isEmpty()) {
@@ -163,4 +193,3 @@ int main()
 {
 	List list1;
 }
-
