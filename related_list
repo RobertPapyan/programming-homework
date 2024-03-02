@@ -21,18 +21,20 @@ public:
 	~List();
 	void insertAtFront(const double);
 	void insertAtBack(const double);
-	bool insertAfterIndex(const int);
+	bool insertAfterIndex(const size_t, const double);
 	bool removeFromFront(double&);
 	bool removeFromBack(double&);
 	bool isEmpty()const;
+	template <class size_t>
+	size_t getElementCount()const;
 	void instructions();
 	void printList();
 
 private:
-	ListNode* createNode( double, ListNode*) const;
+	ListNode* createNode(double, ListNode*) const;
 	ListNode* _firstPtr;
 	ListNode* _lastPtr;
-	int _counter;
+	size_t _counter;
 };
 
 
@@ -46,26 +48,26 @@ List::List()
 
 List::~List()
 {
-	
+
 	this->_lastPtr = nullptr;
-		while (!this->isEmpty())
-		{
-			ListNode* deletableNode = this->_firstPtr;
-			this->_firstPtr = this->_firstPtr->_nextPtr;
-			delete deletableNode;
-		}
-	
+	while (!this->isEmpty())
+	{
+		ListNode* deletableNode = this->_firstPtr;
+		this->_firstPtr = this->_firstPtr->_nextPtr;
+		delete deletableNode;
+	}
+
 	cout << "Ended list processing" << endl;
 }
-ListNode* List::createNode( double value, ListNode* next = nullptr)const {
-	
-	return(new ListNode(value,next));
- }
+ListNode* List::createNode(double value, ListNode* next = nullptr)const {
+
+	return(new ListNode(value, next));
+}
 
 void List::insertAtFront(const double newValue) {
 	ListNode* newNode = this->createNode(newValue, this->_firstPtr);
 	if (!this->isEmpty()) {
-		
+
 		this->_firstPtr = newNode;
 	}
 	else {
@@ -76,9 +78,9 @@ void List::insertAtFront(const double newValue) {
 }
 void List::insertAtBack(const double newValue) {
 	ListNode* newNode = this->createNode(newValue);
-	if(!this->isEmpty()){
-	this->_lastPtr->_nextPtr = newNode;
-	this->_lastPtr = newNode;
+	if (!this->isEmpty()) {
+		this->_lastPtr->_nextPtr = newNode;
+		this->_lastPtr = newNode;
 	}
 	else {
 		this->_firstPtr = newNode;
@@ -87,17 +89,31 @@ void List::insertAtBack(const double newValue) {
 	this->_counter++;
 }
 
-bool List::insertAfterIndex(const int index){
-    if(index>this->_counter){
-        return false;
-        }
-    int loopIndex = 0;
-	ListNode* loopNode = this->_firstPtr;
-	while (loopNode->_nextPtr != this->_lastPtr) {
-		loopNode = loopNode->_nextPtr;
+bool List::insertAfterIndex(const size_t index, const double value) {
+	if (index > this->_counter || index < 0) {
+		return false;
 	}
-    
-    }
+	else if (index == 0) {
+		this->insertAtFront(value);
+	}
+	else if (index == this->_counter) {
+		this->insertAtBack(value);
+	}
+	else {
+		int loopIndex = 1;
+		ListNode* loopNode = this->_firstPtr;
+		while (loopNode->_nextPtr != this->_lastPtr) {
+			if (loopIndex == index) {
+				loopNode->_nextPtr = this->createNode(value, loopNode->_nextPtr);
+				this->_counter++;
+				return true;
+			}
+			loopNode = loopNode->_nextPtr;
+			loopIndex++;
+		}
+	}
+	return false;
+}
 
 bool List::removeFromFront(double& value) {
 	if (this->isEmpty()) {
@@ -113,26 +129,32 @@ bool List::removeFromFront(double& value) {
 bool List::removeFromBack(double& value) {
 	if (this->isEmpty()) {
 		return false;
-	}if(this->_lastPtr == this->_firstPtr){
-	    value  = this->_lastPtr->_data;
-	    delete this->_lastPtr;
-	    this->_lastPtr = nullptr;
-	    this->_firstPtr = nullptr;
-	    this->_counter--;
-	    return true;
-	    }else{
-	value = this->_lastPtr->_data;
-	ListNode* loopNode = this->_firstPtr;
-	while (loopNode->_nextPtr != this->_lastPtr) {
-		loopNode = loopNode->_nextPtr;
+	}if (this->_lastPtr == this->_firstPtr) {
+		value = this->_lastPtr->_data;
+		delete this->_lastPtr;
+		this->_lastPtr = nullptr;
+		this->_firstPtr = nullptr;
+		this->_counter--;
+		return true;
 	}
-	   
-	delete loopNode->_nextPtr;
-	loopNode->_nextPtr = nullptr;
-	this->_lastPtr = loopNode;
-	this->_counter--;
-	return true;
-	    }
+	else {
+		value = this->_lastPtr->_data;
+		ListNode* loopNode = this->_firstPtr;
+		while (loopNode->_nextPtr != this->_lastPtr) {
+			loopNode = loopNode->_nextPtr;
+		}
+
+		delete loopNode->_nextPtr;
+		loopNode->_nextPtr = nullptr;
+		this->_lastPtr = loopNode;
+		this->_counter--;
+		return true;
+	}
+}
+
+template <class size_t>
+size_t List::getElementCount()const {
+	return(this->_counter);
 }
 void List::instructions() {
 	int action;
@@ -142,13 +164,15 @@ void List::instructions() {
 	cout << "2 to insert at the end of ilst" << endl;
 	cout << "3 to delete from the begining of ilst" << endl;
 	cout << "4 to delete at the end of ilst" << endl;
-	cout << "5 to end ilst processing" << endl;
+	cout << "5 to insert after index INDEX" << endl;
+	cout << "6 to show elements number" << endl;
+	cout << "7 to end ilst processing" << endl;
 	cin >> action;
 	if (action == 1) {
 		cout << "Enter value:" << endl;
 		cin >> value;
 		this->insertAtFront(value);
-		
+
 		this->printList();
 	}
 	else if (action == 2) {
@@ -158,7 +182,7 @@ void List::instructions() {
 		this->printList();
 	}
 	else if (action == 3) {
-		this->removeFromFront(value)? cout<<"Deleted "<<value<< " from list begining"<<endl : cout<<"Can not delete"<<endl;
+		this->removeFromFront(value) ? cout << "Deleted " << value << " from list begining" << endl : cout << "Can not delete" << endl;
 		this->printList();
 	}
 	else if (action == 4) {
@@ -166,7 +190,20 @@ void List::instructions() {
 		this->printList();
 	}
 	else if (action == 5) {
-	    this->printList();
+		cout << "Enter value:" << endl;
+		cin >> value;
+		size_t index;
+		cout << "Enter index:" << endl;
+		cin >> index;
+		cout <<this->insertAfterIndex(index, value)<<endl;
+		this->printList();
+	}
+	else if (action == 6) {this->printList();
+		
+		cout << "Count = " << this->getElementCount<size_t>() << endl;
+	}
+	else if (action == 7) {
+		this->printList();
 		return;
 	}
 	this->instructions();
@@ -184,8 +221,8 @@ void List::printList() {
 	while (loopNode != nullptr) {
 		cout << loopNode->_data << " ---> ";
 		loopNode = loopNode->_nextPtr;
-	} 
-		cout <<endl<< "======================" << endl << endl;
+	}
+	cout << endl << "======================" << endl << endl;
 }
 
 
