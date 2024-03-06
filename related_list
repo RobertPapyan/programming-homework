@@ -102,7 +102,7 @@ bool List::insertAfterIndex(const size_t index, const double value) {
 	else {
 		int loopIndex = 1;
 		ListNode* loopNode = this->_firstPtr;
-		while (loopNode->_nextPtr != this->_lastPtr) {
+		while (loopNode->_nextPtr != this->_lastPtr->_nextPtr) {
 			if (loopIndex == index) {
 				loopNode->_nextPtr = this->createNode(value, loopNode->_nextPtr);
 				this->_counter++;
