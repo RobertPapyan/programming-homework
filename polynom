@@ -1,0 +1,201 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+class Polynom
+{
+public:
+	Polynom(const int);
+	~Polynom();
+	void PolynomWithCoef(vector<double>);
+	void PolynomWithDegrees(vector<int>);
+	void PolynomFullConst(vector<double>, vector<int>, char);
+	void PrintPolynom();
+	int	getObjCount();
+	int size;
+	static int objCounter;
+	vector<double> coefs;
+	vector<int> degrees;
+	char VarLetter;
+	
+
+};
+int Polynom::objCounter = 0;
+Polynom::Polynom(int size) {
+	this->size = size;
+	for (int i = 0; i < size; i++) {
+		coefs.push_back(0);
+		degrees.push_back(0);
+	}
+	
+	this->VarLetter = 'x';
+}
+void Polynom::PolynomWithCoef(vector<double> vect) {
+	for (int i = 0; i < this->size; i++) {	
+		this->coefs[i] = vect[i];
+		this->degrees[i] = 1;
+	}
+	
+}
+void Polynom::PolynomWithDegrees(vector<int> vect) {
+	for (int i = 0; i < this->size; i++) {
+		this->degrees[i] = vect[i];
+		this->coefs[i] = 1;
+	}
+	
+}
+void Polynom::PolynomFullConst(vector<double> coefVect, vector<int> degVect, char letter) {
+	for (int i = 0; i < this->size; i++) {
+		this->coefs[i] = coefVect[i];
+		this->degrees[i] = degVect[i];
+		}
+	this->VarLetter = letter;
+	
+}
+void Polynom::PrintPolynom() {
+	for (int i = 0; i < this->size; i++) {
+		cout << this->coefs[i] << this->VarLetter << '^' << this->degrees[i];
+		if (i != size - 1)cout << '+';
+	}
+	cout << endl;
+}
+int Polynom::getObjCount() {
+	return this->objCounter;
+}
+double calcPolynomAt(Polynom* pol, double x) {
+	double value=0;
+	for(int i = 0;i < pol->size;i++){
+		value += pol->coefs[i] * (pow(x, pol->degrees[i]));
+	}
+	return value;
+}
+Polynom calcDerivative(Polynom* pol, int degree) {
+	vector<double> v1;
+	vector<int> v2;
+	
+	for (int i = 0; i < degree; i++) {
+		vector <double> a1;
+		vector <int> a2;
+		if (i == 0) {
+			for (int j = 0; j < pol->size; j++) {
+				if (pol->degrees[j] != 0) {
+					v1.push_back(pol->degrees[j] * pol->coefs[j]);
+					v2.push_back(pol->degrees[j] - 1);
+				}
+			}
+		}
+		else {
+			for (int j = 0; j < v1.size(); j++) {
+				if (v2[j] != 0) {
+					a1.push_back(v1[j] * v2[j]);
+					a2.push_back(v2[j] - 1);
+				}
+			}
+		}
+
+		v1 = a1;
+		v2 = a2;
+	}
+	Polynom p1(v1.size());
+	p1.PolynomFullConst(v1, v2, pol->VarLetter);
+	return p1;
+}
+void instructions(Polynom* currentPol) {
+	int action;
+	cout << "Enter one of the following:" << endl;
+	cout << "1 to setup new polynom with only coeficents" << endl;
+	cout << "2 to setup new polynom with only degrees" << endl;
+	cout << "3 to setup new polynom with dgrees and coeficents" << endl;
+	cout << "4 to print current polynom" << endl;
+	cout << "5 to calculate Derivative at some degree" << endl;
+	cout << "6 to calculate Polynom value at some index" << endl;
+	cout << "7 to show number of all created Polynoms" << endl;
+	cout << "8 to exit"<<endl;
+	cin >> action;
+	if (action == 1) {
+		int size;
+		double a;
+		vector<double> arr;
+		cout << "Enter the size" << endl;
+		cin >> size;
+		cout << "Enter the coeficents" << endl;
+		for (int i = 0; i < size; i++) {
+			cin >> a;
+			arr.push_back(a);
+		}
+		currentPol = new Polynom(size);
+		currentPol->PolynomWithCoef(arr);
+		Polynom::objCounter++;
+	}
+	else if (action == 2) {
+		int size;
+		int a;
+		vector<int> arr;
+		cout << "Enter the size" << endl;
+		cin >> size;
+		cout << "Enter the degrees" << endl;
+		for (int i = 0; i < size; i++) {
+			cin >> a;
+			arr.push_back(a);
+		}
+		currentPol = new Polynom(size);
+		currentPol->PolynomWithDegrees(arr);
+		Polynom::objCounter++;
+	}
+	else if (action == 3) {
+		int size;
+		double a;
+		int b;
+		vector<double> arr1;
+		vector<int> arr2;
+		char letter;
+		cout << "Enter the size" << endl;
+		cin >> size;
+		cout << "Enter the char letter" << endl;
+		cin >> letter;
+		cout << "Enter the coeficents and the degrees" << endl;
+		for (int i = 0; i < size; i++) {
+			cin >> a;
+			cin >> b;
+			arr1.push_back(a);
+			arr2.push_back(b);
+		}
+		currentPol = new Polynom(size);
+		currentPol->PolynomFullConst(arr1, arr2, letter);
+		Polynom::objCounter++;
+	}
+	else if (action == 4) {
+		currentPol->PrintPolynom();
+	}
+	else if (action == 5){
+		int degree;
+		cout << "Enter the degree:" << endl;
+		cin >> degree;
+		
+		Polynom p1 = calcDerivative(currentPol, degree);
+		p1.PrintPolynom();
+	}
+	else if (action == 6){
+		int x;
+		cout << "Enter the vairable:" << endl;
+		cin >> x;
+		cout << calcPolynomAt(currentPol, x) << endl;
+	}
+	else if (action == 7){
+		cout << currentPol->getObjCount() << endl;
+	}
+	else if (action == 8) {
+		return;
+	}
+	instructions(currentPol);
+}
+
+
+
+int main()
+{
+	instructions(new Polynom(1));
+
+
+}
