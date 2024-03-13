@@ -7,10 +7,10 @@ class Polynom
 {
 public:
 	Polynom(const int);
-	~Polynom();
-	void PolynomWithCoef(vector<double>);
-	void PolynomWithDegrees(vector<int>);
-	void PolynomFullConst(vector<double>, vector<int>, char);
+	~Polynom() {}
+    Polynom (vector<double>);
+	Polynom(vector<int>);
+	Polynom(vector<double>, vector<int>, char);
 	void PrintPolynom();
 	int	getObjCount();
 	int size;
@@ -18,10 +18,10 @@ public:
 	vector<double> coefs;
 	vector<int> degrees;
 	char VarLetter;
-	
-
 };
+
 int Polynom::objCounter = 0;
+
 Polynom::Polynom(int size) {
 	this->size = size;
 	for (int i = 0; i < size; i++) {
@@ -31,21 +31,41 @@ Polynom::Polynom(int size) {
 	
 	this->VarLetter = 'x';
 }
-void Polynom::PolynomWithCoef(vector<double> vect) {
+ Polynom::Polynom(vector<double> vect)   {
+    	this->size = vect.size();
+	for (int i = 0; i < size; i++) {
+		coefs.push_back(0);
+		degrees.push_back(0);
+	}
+	
+	this->VarLetter = 'x';
 	for (int i = 0; i < this->size; i++) {	
 		this->coefs[i] = vect[i];
 		this->degrees[i] = 1;
 	}
 	
 }
-void Polynom::PolynomWithDegrees(vector<int> vect) {
+ Polynom::Polynom(vector<int> vect) {
+    	this->size = vect.size();
+	for (int i = 0; i < size; i++) {
+		coefs.push_back(0);
+		degrees.push_back(0);
+	}
+	
+	this->VarLetter = 'x';
 	for (int i = 0; i < this->size; i++) {
 		this->degrees[i] = vect[i];
 		this->coefs[i] = 1;
 	}
-	
 }
-void Polynom::PolynomFullConst(vector<double> coefVect, vector<int> degVect, char letter) {
+ Polynom::Polynom(vector<double> coefVect, vector<int> degVect, char letter) {
+    	this->size = coefVect.size();
+	for (int i = 0; i < size; i++) {
+		coefs.push_back(0);
+		degrees.push_back(0);
+	}
+	
+	this->VarLetter = 'x';
 	for (int i = 0; i < this->size; i++) {
 		this->coefs[i] = coefVect[i];
 		this->degrees[i] = degVect[i];
@@ -97,9 +117,9 @@ Polynom calcDerivative(Polynom* pol, int degree) {
 		v1 = a1;
 		v2 = a2;
 	}
-	Polynom p1(v1.size());
-	p1.PolynomFullConst(v1, v2, pol->VarLetter);
-	return p1;
+	Polynom p1(v1, v2, pol->VarLetter);
+	
+    return p1;
 }
 void instructions(Polynom* currentPol) {
 	int action;
@@ -124,8 +144,8 @@ void instructions(Polynom* currentPol) {
 			cin >> a;
 			arr.push_back(a);
 		}
-		currentPol = new Polynom(size);
-		currentPol->PolynomWithCoef(arr);
+		currentPol = new Polynom(arr);
+		
 		Polynom::objCounter++;
 	}
 	else if (action == 2) {
@@ -139,8 +159,8 @@ void instructions(Polynom* currentPol) {
 			cin >> a;
 			arr.push_back(a);
 		}
-		currentPol = new Polynom(size);
-		currentPol->PolynomWithDegrees(arr);
+		currentPol = new Polynom(arr);
+		
 		Polynom::objCounter++;
 	}
 	else if (action == 3) {
@@ -161,8 +181,7 @@ void instructions(Polynom* currentPol) {
 			arr1.push_back(a);
 			arr2.push_back(b);
 		}
-		currentPol = new Polynom(size);
-		currentPol->PolynomFullConst(arr1, arr2, letter);
+		currentPol = new Polynom(arr1, arr2, letter);
 		Polynom::objCounter++;
 	}
 	else if (action == 4) {
@@ -173,8 +192,9 @@ void instructions(Polynom* currentPol) {
 		cout << "Enter the degree:" << endl;
 		cin >> degree;
 		
-		Polynom p1 = calcDerivative(currentPol, degree);
-		p1.PrintPolynom();
+    	Polynom p1 = calcDerivative(currentPol, degree);
+    	p1.PrintPolynom();
+	
 	}
 	else if (action == 6){
 		int x;
