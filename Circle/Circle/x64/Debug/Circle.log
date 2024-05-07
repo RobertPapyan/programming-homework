@@ -1,0 +1,3 @@
+﻿  Circle_homework.cpp
+C:\Users\Robert\source\repos\Circle\Circle\Circle_homework.cpp(36): warning C4715: 'crossingNumber': not all control paths return a value
+  Circle.vcxproj -> C:\Users\Robert\source\repos\Circle\x64\Debug\Circle.exe
