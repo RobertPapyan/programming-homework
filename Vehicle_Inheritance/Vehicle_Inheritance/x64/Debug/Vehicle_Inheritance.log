@@ -1,0 +1,4 @@
+﻿  Vehicle_Inheritance.cpp
+C:\Users\Robert\source\repos\Vehicle_Inheritance\Vehicle_Inheritance\Vehicle_Inheritance.cpp(76,44): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Robert\source\repos\Vehicle_Inheritance\Vehicle_Inheritance\Vehicle_Inheritance.cpp(77,52): warning C4305: 'argument': truncation from 'double' to 'float'
+  Vehicle_Inheritance.vcxproj -> C:\Users\Robert\source\repos\Vehicle_Inheritance\x64\Debug\Vehicle_Inheritance.exe
