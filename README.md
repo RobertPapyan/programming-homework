@@ -46,5 +46,5 @@ php artisan vendor:publish --tag=fm-config
 ```
 
 
-##More information
+## More information
 [Docs](https://github.com/alexusmai/laravel-file-manager/tree/master/docs)
