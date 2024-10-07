@@ -1,0 +1,143 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    
+    Node(int value) {
+        data = value;
+        next = nullptr;
+    }
+};
+
+
+class LinkedList {
+private:
+    Node* head;
+    
+public:
+
+    LinkedList() {
+        head = nullptr;
+    }
+    
+
+    ~LinkedList() {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* nextNode = current->next;
+            delete current;
+            current = nextNode;
+        }
+    }
+    
+
+    void insert(int value) {
+        Node* newNode = new Node(value);
+        
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+    
+
+    void deleteNode(int value) {
+        if (head == nullptr) return;
+        
+
+        if (head->data == value) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
+        
+
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->data != value) {
+            temp = temp->next;
+        }
+        
+        if (temp->next == nullptr) {
+            cout << "Value not found in the list." << endl;
+            return;
+        }
+        
+        Node* nodeToDelete = temp->next;
+        temp->next = nodeToDelete->next;
+        delete nodeToDelete;
+    }
+    
+    void display() {
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+        cout << "NULL" << endl;
+    }
+    Node* getHead() const{
+        return head;
+    }
+    static LinkedList sumLists(const LinkedList& l1,const LinkedList& l2){
+        LinkedList newList;
+        int odd = 0;
+        Node* temp1 = l1.getHead();
+        Node* temp2 = l2.getHead();
+        do{
+            int data1 = (temp1 != nullptr) ? temp1->data : 0; 
+            int data2 = (temp2 != nullptr) ? temp2->data : 0;
+            cout << data1 << '|' << data2 << endl;
+            int k = data1 + data2 + odd;
+            if(k > 9){
+                odd = k/10;
+                k = k%10;
+            }else{
+                odd = 0;
+            }
+            newList.insert(k);
+            temp1 = (temp1 == nullptr) ? nullptr : temp1->next;
+            temp2 = (temp2 == nullptr) ? nullptr : temp2->next;
+        }while(!(temp1 == nullptr && temp2 == nullptr));
+        if(odd != 0){
+            newList.insert(odd);
+        }
+        return newList;
+    }
+};
+
+int main() {
+    LinkedList l1,l2;
+    int n,m;
+    cout << "Insert n " ;
+    cin >> n;
+    cout << "Insert l1 nodes`" << endl;
+    for(int i = 0; i < n ;i++){
+        int k;
+        cin >> k;
+        l1.insert(k);
+    }
+     cout << "Insert m " ;
+    cin >> m;
+    cout << "Insert l2 nodes`" << endl;
+    for(int i = 0; i < m ;i++){
+        int k;
+        cin >> k;
+        l2.insert(k);
+    }
+    l1.display();
+    l2.display();
+    cout << "Sum `" << endl;
+    LinkedList l3 = LinkedList::sumLists(l1,l2);
+    cout << endl;
+    l3.display();
+    return 0;
+}
