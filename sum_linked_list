@@ -95,7 +95,6 @@ public:
         do{
             int data1 = (temp1 != nullptr) ? temp1->data : 0; 
             int data2 = (temp2 != nullptr) ? temp2->data : 0;
-            cout << data1 << '|' << data2 << endl;
             int k = data1 + data2 + odd;
             if(k > 9){
                 odd = k/10;
