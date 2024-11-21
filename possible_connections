@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <cstdlib>
+#include <ctime>
+
+std::vector<int> find_students_with_same_degree(const std::vector<int>& degrees) {
+    std::unordered_map<int, std::vector<int>> degree_map;
+    for (int i = 0; i < degrees.size(); ++i) {
+        degree_map[degrees[i]].push_back(i + 1);
+        if (degree_map[degrees[i]].size() >= 4) {
+            return {degree_map[degrees[i]].begin(), degree_map[degrees[i]].begin() + 4};
+        }
+    }
+    return {};
+}
+
+int main() {
+    const int num_students = 102;
+    const int min_familiar = 68;
+
+    std::vector<std::vector<bool>> familiarity(num_students, std::vector<bool>(num_students, false));
+    std::vector<int> degrees(num_students, 0);
+
+    std::srand(std::time(0));
+
+    for (int i = 0; i < num_students; ++i) {
+        while (degrees[i] < min_familiar) {
+            int j = std::rand() % num_students;
+            if (i != j && !familiarity[i][j]) {
+                familiarity[i][j] = true;
+                familiarity[j][i] = true;
+                degrees[i]++;
+                degrees[j]++;
+            }
+        }
+    }
+
+    std::vector<int> students = find_students_with_same_degree(degrees);
+
+    if (!students.empty()) {
+        std::cout << "There are at least 4 students with the same number of familiar connections.\n";
+        std::cout << "The 4 students are: ";
+        for (int student : students) {
+            std::cout << "Student " << student << " ";
+        }
+        std::cout << "\n";
+    } else {
+        std::cout << "No group of 4 students has the same number of familiar connections.\n";
+    }
+
+    for (int i = 0; i < num_students; ++i) {
+        std::cout << "Student " << i + 1 << " knows " << degrees[i] << " others.\n";
+    }
+
+    std::cout << "\nMatrix of Connections:\n";
+    for (int i = 0; i < num_students; ++i) {
+        for (int j = 0; j < num_students; ++j) {
+            std::cout << (familiarity[i][j] ? "1 " : "0 ");
+        }
+        std::cout << "\n";
+    }
+
+    return 0;
+}
